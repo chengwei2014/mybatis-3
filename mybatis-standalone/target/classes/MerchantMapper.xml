@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gupaoedu.mapper.MerchantMapper">
+    <!-- 声明这个namespace使用二级缓存 -->
+<!--    <cache/>-->
+
+    <!-- 使用Redis作为二级缓存 -->
+<!--
+    <cache type="org.mybatis.caches.redis.RedisCache"
+           eviction="FIFO" flushInterval="60000" size="512" readOnly="true"/>
+-->
+        <cache type="org.apache.ibatis.cache.impl.PerpetualCache"
+               size="1024"
+               eviction="LRU"
+               flushInterval="120000"
+               readOnly="false"/>
+
+    <resultMap id="BaseResultMap" type="merchant">
+        <id column="bid" property="id" jdbcType="INTEGER"/>
+<!--
+        <result column="name" property="name" jdbcType="VARCHAR" typeHandler="com.gupaoedu.type.MyTypeHandler"/>
+-->
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="product" property="product" jdbcType="VARCHAR" typeHandler="com.gupaoedu.type.MerchantTypeHandler"/>
+    </resultMap>
+
+
+    <select id="selectMerchants" resultMap="BaseResultMap" >
+        select id, name, product from merchant
+    </select>
+
+    <!-- 动态SQL trim -->
+    <insert id="insertMerchant" parameterType="merchant">
+        insert into merchant
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="product != null">
+                product,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{bid,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+                <!-- #{name,jdbcType=VARCHAR,typeHandler=com.gupaoedu.type.MyTypeHandler}, -->
+            </if>
+            <if test="product != null">
+                #{product,jdbcType=VARCHAR,typeHandler=com.gupaoedu.type.MerchantTypeHandler},
+            </if>
+        </trim>
+    </insert>
+
+</mapper>
