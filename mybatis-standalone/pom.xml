@@ -25,7 +25,7 @@
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
             <!--<version>3.5.4</version>-->
-            <version>3.5.4-snapshot</version>
+            <version>3.5.6</version>
         </dependency>
 
         <dependency>
